@@ -1,0 +1,93 @@
+README
+
+Quantum Time Scheduler
+Ali Musa
+February 22, 2024
+
+Code Description
+The Quantum Time Scheduler is a program that simulates a scheduling algorithm using a Circular Doubly Linked List. It allows users to input a quantum time, prepopulate a list of processes with their names and total times, and then run a scheduler cycle to update and manage the processes.
+
+Process Class
+—Public Member Variables
+- string processName; - Holds the name of the process.
+- int totalTime; - Represents the total time required for the process.
+—Constructors
+- Process(string processName, int totalTime);` - Constructs a Process object with the given name and total time.
+—Public Member Functions
+-   void updateRunTime(int quantumTime);
+  - Brief: Updates the remaining time for the process after each quantum cycle.
+  - Precondition: The process object must be initialized.
+  - Postcondition: The total time is decremented by the quantum time.
+- void print();
+  - Brief: Prints the process details.
+  - Precondition: The process object must be initialized.
+  - Postcondition: Process details are printed to the console.
+
+Node Class
+—Public Member Variables
+- T *value; - Pointer to the data of type T.
+- Node<T> *next; - Pointer to the next node.
+- Node<T> *prev; - Pointer to the previous node.
+—Constructors
+- Node(T *value); - Constructs a Node object with the given value.
+—Public Member Functions
+- void print();
+  - Brief: Prints the value held by the node.
+  - Precondition: The node object must be initialized.
+  - Postcondition: The value is printed to the console.
+
+CircularDLL Class
+—Private Member Variables
+- Node<T> *head; - Pointer to the head node.
+- int length; - Represents the length of the circular doubly linked list.
+—Constructors
+- CircularDLL(T *value); - Constructs a CircularDLL object with the given initial value.
+—Destructor
+- ~CircularDLL(); - Destructs the CircularDLL object, freeing allocated memory.
+
+Public Member Functions
+- void printList();
+  - Brief: Prints the entire circular doubly linked list.
+  - Precondition: The circular doubly linked list must be initialized.
+  - Postcondition: The list is printed to the console.
+- Node<T> *getHead();
+  - Brief: Returns the head node of the list.
+  - Precondition: The circular doubly linked list must be initialized.
+  - Postcondition: The head node is returned.
+- int getLength();
+  - Brief: Returns the length of the list.
+  - Precondition: The circular doubly linked list must be initialized.
+  - Postcondition: The length of the list is returned.
+- bool isEmpty();
+  - Brief: Checks if the list is empty.
+  - Precondition: The circular doubly linked list must be initialized.
+  - Postcondition: Returns true if the list is empty, false otherwise.
+- void updateTimes(int quantumTime);
+  - Brief: Updates the time for each process in the list after a scheduler cycle.
+  - Precondition: The circular doubly linked list must be initialized.
+  - Postcondition: The times for all processes are updated.
+- void append(T *value);
+  - Brief: Appends a new node with the given value to the end of the list.
+  - Precondition: The circular doubly linked list must be initialized.
+  - Postcondition: A new node is added to the end of the list.
+- void prepend(T *value);
+  - Brief: Prepends a new node with the given value to the beginning of the list.
+  - Precondition: The circular doubly linked list must be initialized.
+  - Postcondition: A new node is added to the beginning of the list.
+- bool insert(int index, T *value);
+  - Brief: Inserts a new node with the given value at the specified index in the list.
+  - Precondition: The circular doubly linked list must be initialized.
+  - Postcondition: A new node is inserted at the specified index.
+- void deleteLast();
+  - Brief: Deletes the last node in the list.
+  - Precondition: The circular doubly linked list must be initialized and not empty.
+  - Postcondition: The last node is removed from the list.
+- void deleteFirst();
+  - Brief: Deletes the first node in the list.
+  - Precondition: The circular doubly linked list must be initialized and not empty.
+  - Postcondition: The first node is removed from the list.
+- void deleteNode(int index);
+  - Brief: Deletes the node at the specified index in the list.
+  - Precondition: The circular doubly linked list must be initialized and not empty.
+  - Postcondition: The node at the specified index is removed from the list.
+
