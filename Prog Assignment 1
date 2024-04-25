@@ -1,0 +1,264 @@
+*** C++ coding Practice ***
+#include <iostream>
+
+using namespace std;
+
+// Data Class: Holds all the data that goes inside the Node
+class Process {
+public:
+    string processName;
+    int totalTime;
+
+    Process(string processName, int totalTime) : processName(processName), totalTime(totalTime) {}
+
+    void updateRunTime(int quantumTime) {
+        totalTime -= quantumTime;
+    }
+
+    void print() {
+        cout << "Process " << processName << " " << totalTime << " seconds" << endl;
+    }
+};
+
+// Node Class: Node for the CircularDoublyLinkedList
+template <typename T>
+class Node {
+public:
+    T *value;
+    Node<T> *next;
+    Node<T> *prev;
+
+    Node(T *value) : value(value), next(nullptr), prev(nullptr) {}
+
+    void print() {
+        value->print();
+    }
+};
+
+// CircularDoublyLinkedList Class: Container for Nodes
+template <typename T>
+class CircularDLL {
+private:
+    Node<T> *head;
+    int length;
+
+public:
+    // Constructor
+    CircularDLL(T *value) : head(new Node<T>(value)), length(1) {
+        head->next = head->prev = head;
+    }
+
+    // Destructor
+    ~CircularDLL() {
+        Node<T> *temp = head;
+        for (int i = 0; i < length; ++i) {
+            Node<T> *nextNode = temp->next;
+            delete temp;
+            temp = nextNode;
+        }
+    }
+
+    // Print the circular doubly linked list
+    void printList() {
+        if (isEmpty()) {
+            cout << "List is empty." << endl;
+            return;
+        }
+
+        Node<T> *temp = head;
+        for (int i = 0; i < length; ++i) {
+            temp->print();
+            temp = temp->next;
+        }
+    }
+
+    // Get the head node
+    Node<T> *getHead() {
+        return head;
+    }
+
+    // Get the length of the list
+    int getLength() {
+        return length;
+    }
+
+    // Check if the list is empty
+    bool isEmpty() {
+        return length == 0;
+    }
+
+    // Update the time for each process
+    void updateTimes(int quantumTime) {
+        Node<T> *current = head;
+        do {
+            current->value->updateRunTime(quantumTime);
+            current = current->next;
+        } while (current != head);
+    }
+
+    // Insert at the end
+    void append(T *value) {
+        Node<T> *newNode = new Node<T>(value);
+        if (isEmpty()) {
+            head = newNode;
+        } else {
+            newNode->prev = head->prev;
+            newNode->next = head;
+            head->prev->next = newNode;
+            head->prev = newNode;
+        }
+        length++;
+    }
+
+    // Insert at the beginning
+    void prepend(T *value) {
+        Node<T> *newNode = new Node<T>(value);
+        if (isEmpty()) {
+            head = newNode;
+        } else {
+            newNode->prev = head->prev;
+            newNode->next = head;
+            head->prev->next = newNode;
+            head->prev = newNode;
+            head = newNode;
+        }
+        length++;
+    }
+
+    // Insert at the given index
+    bool insert(int index, T *value) {
+        if (index < 0 || index > length) {
+            return false;
+        }
+
+        if (index == 0) {
+            prepend(value);
+        } else if (index == length) {
+            append(value);
+        } else {
+            Node<T> *newNode = new Node<T>(value);
+            Node<T> *temp = head;
+            for (int i = 0; i < index - 1; ++i) {
+                temp = temp->next;
+            }
+            newNode->next = temp->next;
+            newNode->prev = temp;
+            temp->next->prev = newNode;
+            temp->next = newNode;
+            length++;
+        }
+
+        return true;
+    }
+
+    // Delete the last node
+    void deleteLast() {
+        if (!isEmpty()) {
+            Node<T> *lastNode = head->prev;
+            if (length == 1) {
+                head = nullptr;
+            } else {
+                lastNode->prev->next = head;
+                head->prev = lastNode->prev;
+            }
+            delete lastNode;
+            length--;
+        }
+    }
+
+    // Delete the first node
+    void deleteFirst() {
+        if (!isEmpty()) {
+            Node<T> *firstNode = head;
+            if (length == 1) {
+                head = nullptr;
+            } else {
+                head = head->next;
+                head->prev = firstNode->prev;
+                firstNode->prev->next = head;
+            }
+            delete firstNode;
+            length--;
+        }
+    }
+
+    // Delete the node at the given index
+    void deleteNode(int index) {
+        if (index < 0 || index >= length) {
+            return;
+        }
+
+        if (index == 0) {
+            deleteFirst();
+        } else if (index == length - 1) {
+            deleteLast();
+        } else {
+            Node<T> *temp = head;
+            for (int i = 0; i < index; ++i) {
+                temp = temp->next;
+            }
+            temp->prev->next = temp->next;
+            temp->next->prev = temp->prev;
+            delete temp;
+            length--;
+        }
+    }
+};
+
+// Main function
+int main() {
+    // Step 1: user input
+    int quantumTime;
+    cout << "Enter Quantum Time: ";
+    cin >> quantumTime;
+
+    // Step 2: Prepopulation
+    Process processA("A", 10);
+    Process processB("B", 12);
+    Process processC("C", 8);
+    Process processD("D", 5);
+    Process processE("E", 10);
+
+    CircularDLL<Process> processList(&processA);
+    processList.append(&processB);
+    processList.append(&processC);
+    processList.append(&processD);
+    processList.append(&processE);
+
+    // Step 3: Scheduler cycle
+    int cycle = 1;
+    while (!processList.isEmpty()) {
+        cout << "Running Cycle " << cycle << endl;
+        processList.printList();
+
+        // Step 3A: Perform scheduler cycle operations (update times, delete processes, etc.)
+        processList.updateTimes(quantumTime);
+        processList.deleteLast();
+
+        // Step 3B: Ask the user if they want to add a new process
+        char addNewProcess;
+        cout << "Add new process? Enter (Y/N) ";
+        cin >> addNewProcess;
+
+        if (addNewProcess == 'Y' || addNewProcess == 'y') {
+            // Step 3C: Take input for the new process and add it to the list
+            string newName;
+            int newTotalTime;
+
+            cout << "Enter New Process Name: ";
+            cin >> newName;
+
+            cout << "Enter Total Process Time: ";
+            cin >> newTotalTime;
+
+            Process *newProcess = new Process(newName, newTotalTime);
+            processList.append(newProcess);
+
+            cout << "Process Added." << endl;
+        }
+
+        cycle++;
+    }
+
+    return 0;
+}
