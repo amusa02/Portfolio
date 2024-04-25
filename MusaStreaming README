@@ -1,0 +1,58 @@
+**** NOT FUNCTIONAL, ONLY FOR SCHOOL PROJECT ****
+---Musa Streaming Service
+
+Welcome to Musa, a revolutionary music streaming service designed to transform the way users interact with and enjoy music. Musa empowers users to create personalized playlists, discover new music effortlessly, and share their favorite tunes with friends. This README provides an overview of the Musa project and instructions for getting started.
+
+---Table of Contents
+
+- [Introduction](#introduction)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
+---Introduction
+
+Musa is a web-based music streaming platform built to offer users a dynamic and personalized music experience. The project emphasizes an intuitive user interface, seamless song discovery, social sharing capabilities, and offline playback functionality. This repository contains the source code for Musa, including backend services, frontend components, and database management scripts.
+
+---Features
+
+- **Personalized Playlists:** Users can create, organize, and share custom playlists tailored to their musical preferences.
+- **Seamless Song Discovery:** Leveraging artificial intelligence, Musa provides personalized song recommendations based on user behavior.
+- **Social Sharing:** Users can share playlists and favorite songs on various social media platforms, fostering community interaction.
+- **Engaging Interface:** The user interface is designed to be visually appealing, responsive, and user-friendly.
+- **Offline Playback:** Musa allows users to download music for offline listening, ensuring uninterrupted access to their favorite tracks.
+
+---Technologies Used
+
+- Frontend: HTML, CSS, JavaScript, React.js
+- Backend: Node.js, Express.js, PostgreSQL (or MySQL)
+- Data Storage: Relational Database (SQL)
+- AI/ML: (Optional) Integration with machine learning libraries for recommendation systems
+
+---Getting Started
+
+To run Musa locally, follow these steps:
+
+1. Clone this repository to your local machine.
+2. Install the necessary dependencies using `npm install`.
+3. Set up the database by executing database initialization scripts (`db_init.sql`).
+4. Configure environment variables for database connection and other settings.
+5. Start the backend server using `npm start`.
+6. Launch the frontend application by navigating to the client directory (`cd client`) and running `npm start`.
+
+---Usage
+
+Once the server is running and the front end is launched, you can access Musa through your web browser. Create an account, explore personalized playlists, discover new music, and enjoy the seamless music streaming experience!
+
+---Contributing
+
+Contributions to Musa are welcome! If you'd like to contribute new features, improvements, or bug fixes, please fork this repository, make your changes, and submit a pull request. Be sure to follow the project's coding conventions and guidelines.
+
+---License
+
+This project is licensed under the [MIT License](LICENSE), which means you are free to use, modify, and distribute the code as you see fit. See the `LICENSE` file for more details.
+
+---
