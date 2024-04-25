@@ -1,0 +1,330 @@
+//*** C++ practice ***
+#include <iostream>
+
+// Data class
+class Data {
+private:
+    int value;
+
+public:
+    Data(int val) : value(val) {}
+    void print() { std::cout << value; }
+    void setValue(int val) { value = val; }
+    int getValue() { return value; }
+};
+
+// Node class
+template<typename T>
+class Node {
+private:
+    T* data;
+    Node<T>* leftChild;
+    Node<T>* rightChild;
+    Node<T>* parent;
+
+public:
+    Node(T* data) : data(data), leftChild(nullptr), rightChild(nullptr), parent(nullptr) {}
+    ~Node() { delete data; }
+    void print() { data->print(); }
+    // Set & Get methods for private variables
+    void setData(T* newData) { data = newData; }
+    T* getData() { return data; }
+    void setLeftChild(Node<T>* node) { leftChild = node; }
+    Node<T>* getLeftChild() { return leftChild; }
+    void setRightChild(Node<T>* node) { rightChild = node; }
+    Node<T>* getRightChild() { return rightChild; }
+    void setParent(Node<T>* node) { parent = node; }
+    Node<T>* getParent() { return parent; }
+};
+
+// Binary Search Tree class
+template<typename T>
+class BinarySearchTree {
+private:
+    Node<T>* root;
+    int NumberOfElements;
+    int height;
+    // Private member function to find the successor of a given node
+    Node<T>* findSuccessor(Node<T>* node) {
+        Node<T>* current = node;
+        while (current->getLeftChild() != nullptr) {
+            current = current->getLeftChild();
+        }
+        return current;
+    }
+
+public:
+    void print(){
+        printPreOrder(root);
+        std::cout << std::endl;
+    }
+    // Constructor with Node<T>* argument
+    BinarySearchTree(Node<T>* rootNode) : root(rootNode), NumberOfElements(1), height(1) {}
+
+    // Constructor with Data* argument
+    BinarySearchTree(Data* rootNodeData) : root(new Node<Data>(rootNodeData)), NumberOfElements(1), height(1) {}
+
+    // Destructor
+    ~BinarySearchTree() { /* Implement destructor */ }
+
+    void printPreOrder(Node<T>* node) {
+        if (node) {
+            if (findNode(root, node->getData()) != nullptr) { // Check if node exists before printing
+                node->print();
+                std::cout << ", ";
+                printPreOrder(node->getLeftChild());
+                printPreOrder(node->getRightChild());
+            }
+        }
+    }
+// Public member function to access NumberOfElements
+    int getNumberOfElements() const {
+        return NumberOfElements;
+    }
+    // Method to insert Data* element
+    void insertElement(Data* newData) {
+        Node<T>* newNode = new Node<T>(newData);
+        insertHelper(root, newNode);
+    }
+
+    // Helper function for insert
+    void insertHelper(Node<T>* currentNode, Node<T>* newNode) {
+        if (currentNode->getData()->getValue() > newNode->getData()->getValue()) {
+            if (currentNode->getLeftChild() == nullptr) {
+                currentNode->setLeftChild(newNode);
+                newNode->setParent(currentNode);
+                NumberOfElements++;
+            } else {
+                insertHelper(currentNode->getLeftChild(), newNode);
+            }
+        } else {
+            if (currentNode->getRightChild() == nullptr) {
+                currentNode->setRightChild(newNode);
+                newNode->setParent(currentNode);
+                NumberOfElements++;
+            } else {
+                insertHelper(currentNode->getRightChild(), newNode);
+            }
+        }
+    }
+
+    // Method to delete Data* element
+// Method to delete Data* element
+void deleteElement(Data* data) {
+    Node<T>* nodeToDelete = findNode(root, data);
+    if (nodeToDelete == nullptr) {
+        std::cout << "Number " << data->getValue() << " does not exist" << std::endl;
+        return;
+    }
+
+    // Case 1: Node to delete has no children
+    if (nodeToDelete->getLeftChild() == nullptr && nodeToDelete->getRightChild() == nullptr) {
+        deleteNodeWithNoChildren(nodeToDelete);
+    }
+    // Case 2: Node to delete has one child
+    else if (nodeToDelete->getLeftChild() == nullptr || nodeToDelete->getRightChild() == nullptr) {
+        deleteNodeWithOneChild(nodeToDelete);
+    }
+    // Case 3: Node to delete has two children
+    else {
+        deleteNodeWithTwoChildren(nodeToDelete);
+    }
+
+    NumberOfElements--; // Update the number of elements in the tree
+}
+
+// Helper function to delete a node with no children
+void deleteNodeWithNoChildren(Node<T>* nodeToDelete) {
+    if (nodeToDelete == root) {
+        delete root;
+        root = nullptr;
+    } else {
+        Node<T>* parent = nodeToDelete->getParent();
+        if (parent->getLeftChild() == nodeToDelete) {
+            parent->setLeftChild(nullptr);
+        } else {
+            parent->setRightChild(nullptr);
+        }
+        delete nodeToDelete;
+    }
+}
+
+// Helper function to delete a node with one child
+void deleteNodeWithOneChild(Node<T>* nodeToDelete) {
+    Node<T>* child = (nodeToDelete->getLeftChild() != nullptr) ? nodeToDelete->getLeftChild() : nodeToDelete->getRightChild();
+    if (nodeToDelete == root) {
+        root = child;
+    } else {
+        Node<T>* parent = nodeToDelete->getParent();
+        if (parent->getLeftChild() == nodeToDelete) {
+            parent->setLeftChild(child);
+        } else {
+            parent->setRightChild(child);
+        }
+    }
+    delete nodeToDelete;
+}
+
+// Helper function to delete a node with two children
+void deleteNodeWithTwoChildren(Node<T>* nodeToDelete) {
+    // Find the left child's rightmost descendant
+    Node<T>* successor = nodeToDelete->getLeftChild()->getRightChild();
+    Node<T>* successorParent = nodeToDelete->getLeftChild();
+    while (successor->getRightChild() != nullptr) {
+        successorParent = successor;
+        successor = successor->getRightChild();
+    }
+
+    // Replace the node to delete with the successor
+    nodeToDelete->getData()->setValue(successor->getData()->getValue());
+
+    // If the successor is a direct child of the node to delete, update the left child
+    if (successorParent == nodeToDelete->getLeftChild()) {
+        nodeToDelete->getLeftChild()->setRightChild(successor->getLeftChild());
+    } else {
+        // If the successor has a left child, promote it to take the place of the successor
+        successorParent->setRightChild(successor->getLeftChild());
+    }
+
+    // Delete the successor
+    delete successor;
+}
+
+    // Helper function for finding a node with specific data
+    Node<T>* findNode(Node<T>* currentNode, Data* data) {
+        if (currentNode == nullptr || currentNode->getData()->getValue() == data->getValue()) {
+            return currentNode;
+        }
+        if (currentNode->getData()->getValue() > data->getValue()) {
+            return findNode(currentNode->getLeftChild(), data);
+        }
+        return findNode(currentNode->getRightChild(), data);
+    }
+
+    // Other methods like findKthElement, findSmallestElement, etc.
+    void findSmallest() {
+        // Implementation for finding the smallest element
+        Node<T>* current = root;
+        while (current->getLeftChild() != nullptr) {
+            current = current->getLeftChild();
+        }
+        std::cout << "Smallest element: ";
+        current->getData()->print();
+        std::cout << std::endl;
+    }
+
+    void findBiggest() {
+        // Implementation for finding the biggest element
+        Node<T>* current = root;
+        while (current->getRightChild() != nullptr) {
+            current = current->getRightChild();
+        }
+        std::cout << "Largest element: ";
+        current->getData()->print();
+        std::cout << std::endl;
+    }
+
+    void findKthElement(int k) {
+        // Implementation for finding the kth element
+        int count = 0;
+        Node<T>* result = findKthHelper(root, k, count);
+        if (result != nullptr) {
+            std::cout << "Kth element (" << k << "): ";
+            result->getData()->print();
+            std::cout << std::endl;
+        } else {
+            std::cout << "Number does not exist." << std::endl;
+        }
+    }
+
+    void sortAscending() {
+        // Implementation for sorting in ascending order
+        std::cout << "Sorted (Ascending): ";
+        inOrderTraversal(root);
+        std::cout << std::endl;
+    }
+
+    void sortDescending() {
+        // Implementation for sorting in descending order
+        std::cout << "Sorted (Descending): ";
+        reverseInOrderTraversal(root);
+        std::cout << std::endl;
+    }
+
+private:
+    Node<T>* findKthHelper(Node<T>* node, int k, int& count) {
+        if (node == nullptr) {
+            return nullptr;
+        }
+
+        Node<T>* left = findKthHelper(node->getLeftChild(), k, count);
+        if (left != nullptr) {
+            return left;
+        }
+
+        count++;
+        if (count == k) {
+            return node;
+        }
+
+        return findKthHelper(node->getRightChild(), k, count);
+    }
+
+    void inOrderTraversal(Node<T>* node) {
+        if (node != nullptr) {
+            inOrderTraversal(node->getLeftChild());
+            node->getData()->print();
+            std::cout << " ";
+            inOrderTraversal(node->getRightChild());
+        }
+    }
+
+    void reverseInOrderTraversal(Node<T>* node) {
+        if (node != nullptr) {
+            reverseInOrderTraversal(node->getRightChild());
+            node->getData()->print();
+            std::cout << " ";
+            reverseInOrderTraversal(node->getLeftChild());
+        }
+    }
+};
+
+int main() {
+    int a[] = {10, 45, 23, 67, 89, 34, 12, 99};
+    Data* newData = new Data(a[0]);
+    BinarySearchTree<Data>* newBST = new BinarySearchTree<Data>(newData);
+    for(int i = 1; i < (sizeof(a) / sizeof(int)); i++) {
+        newData = new Data(a[i]);
+        newBST->insertElement(newData);
+    }
+
+    newBST->print();
+    newBST->findSmallest();
+    newBST->findBiggest();
+
+    newData = new Data(10);
+    newBST->deleteElement(newData); // delete root
+    newBST->print();
+
+    newData = new Data(45);
+    newBST->deleteElement(newData); //delete with two children
+    newBST->print();
+
+    newData = new Data(12);
+    newBST->deleteElement(newData); //delete with one child
+    newBST->print();
+
+    newData = new Data(10);
+    newBST->deleteElement(newData); // delete a number that doesn't exist, will print "Number does not exist"
+    newBST->print();
+    newBST->findKthElement(1); //first element
+    newBST->findKthElement(newBST->getNumberOfElements()); //last element
+    newBST->findKthElement(3); // some element in between
+    newBST->findKthElement(7); // Edge case where item does not exist, will print "Number does not exist"
+    newBST->findSmallest();
+    newBST->findBiggest();
+    newBST->sortAscending();
+    newBST->sortDescending();
+
+    return 0;
+}
