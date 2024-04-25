@@ -1,0 +1,68 @@
+README
+
+BST Data Structure/Balancing Algorithm
+Ali Musa
+March 29, 2024
+
+Balancing an Unbalanced BST
+
+1. ReturnType methodName (arguments)
+ReturnType balanceBST(Node* root)
+
+
+2. Brief description of the balanceBST method/how it works
+This method takes the root of an unbalanced BST, inputs it, and returns the root of a balanced BST. It does this by first performing an inOrder traversal to retrieve all the elements from the unbalanced BST. Then, a new balanced BST is constructed with a recursive approach. 
+
+3. Pre and Post conditions of the method
+Preconditions:
+The input BST is valid
+The input BST is unbalanced, but doesn’t have to be
+
+Postconditions:
+The output BST is balanced
+The elements in the output BST are in the same order as the input BST
+
+4. Pseudo code of the method
+ReturnType balanceBST(Node* root):
+    // Traverse the tree in inorder to get the elements in sorted order
+    elements = inOrderTraversal(root)
+    // Construct a balanced BST using the sorted elements
+    return constructBalancedBST(elements, 0, elements.size() - 1)
+
+constructBalancedBST(elements, start, end):
+    // Base case: If the start index is greater than the end index, return null
+    if start > end:
+        return null
+    // Find the middle element index
+    mid = (start + end) / 2
+    // Create a new node with the middle element
+    newNode = Node(elements[mid])
+    // Recursively construct the left subtree with elements before the middle element
+    newNode.leftChild = constructBalancedBST(elements, start, mid - 1)
+    // Recursively construct the right subtree with elements after the middle element
+    newNode.rightChild = constructBalancedBST(elements, mid + 1, end)
+    // Return the new node
+    return newNode
+
+inOrderTraversal(node):
+    // Base case: If the current node is null, return an empty list
+    if node is null:
+        return []
+    // Recursively traverse the left subtree
+    leftElements = inOrderTraversal(node.leftChild)
+    // Add the current node's value to the list of elements
+    elements.append(node.value)
+    // Recursively traverse the right subtree
+    rightElements = inOrderTraversal(node.rightChild)
+    // Concatenate the elements of left subtree, current node, and right subtree
+    return leftElements + [node.value] + rightElements
+
+
+
+
+5. Proof that balanceBST algorithm runs to O(n) time
+The algorithm consists of two main steps:
+1. In-order traversal of the BST to retrieve all elements, which takes O(n) time
+2. Constructing a balanced BST from the retrieved elements, which also takes O(n) time as each element is processed once.
+
+Therefore, the overall time complexity of balancedBST is O(n), where n is the # of nodes in the input BST. This is to make sure that the algorithm runs efficiently even when dealing with larger BSTs.
