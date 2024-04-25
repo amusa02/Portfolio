@@ -1,0 +1,103 @@
+*** README.md
+
+// Inventory Management System
+
+This is a simple inventory management system implemented in Python. It allows users to add items to inventory, remove items from inventory, check item availability, and display the current inventory status.
+
+ How to Use
+
+1. Clone the Repository:
+   ```bash
+   git clone https://github.com/your-username/inventory-management.git
+   ```
+
+2. Run the Script:
+   ```bash
+   cd inventory-management
+   python inventory_management.py
+   ```
+
+3. Follow the Instructions:
+   - The `main()` function in `inventory_management.py` demonstrates usage of the inventory system.
+   - Customize the script to perform specific operations on the inventory.
+
+ Example
+
+```python
+class Item:
+    def __init__(self, name, quantity):
+        self.name = name
+        self.quantity = quantity
+
+    def __str__(self):
+        return f"{self.name} - Quantity: {self.quantity}"
+
+
+class Inventory:
+    def __init__(self):
+        self.items = []
+
+    def add_item(self, item_name, quantity):
+        // Check if item already exists in inventory
+        for item in self.items:
+            if item.name == item_name:
+                item.quantity += quantity
+                break
+        else:
+            new_item = Item(item_name, quantity)
+            self.items.append(new_item)
+
+    def remove_item(self, item_name, quantity):
+        // Find the item in inventory
+        for item in self.items:
+            if item.name == item_name:
+                if item.quantity >= quantity:
+                    item.quantity -= quantity
+                else:
+                    print(f"Error: Not enough {item_name} in inventory.")
+                break
+        else:
+            print(f"Error: {item_name} not found in inventory.")
+
+    def check_item(self, item_name):
+        // Check availability of item
+        for item in self.items:
+            if item.name == item_name:
+                return item.quantity
+        return 0
+
+    def display_inventory(self):
+        print("Current Inventory:")
+        for item in self.items:
+            print(item)
+        print("")
+
+
+def main():
+    // Create an inventory
+    inventory = Inventory()
+
+    // Add items to inventory
+    inventory.add_item("Laptop", 5)
+    inventory.add_item("Chair", 10)
+    inventory.add_item("Book", 20)
+
+    // Display inventory status
+    inventory.display_inventory()
+
+    // Check availability of an item
+    print("Available quantity of Chair:", inventory.check_item("Chair"))
+
+    // Remove items from inventory
+    inventory.remove_item("Laptop", 2)
+    inventory.remove_item("Book", 25)  // This should print an error message
+
+    // Display updated inventory status
+    inventory.display_inventory()
+
+
+if __name__ == "__main__":
+    main()
+```
+
+
